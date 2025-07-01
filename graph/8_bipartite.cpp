@@ -6,7 +6,7 @@
 
 class Solution {
     public:
-        bool check(int node , vector<int> &color , vector<vector<int>>& graph){
+        bool checkbfs(int node , vector<int> &color , vector<vector<int>>& graph){
             queue<int> q;
             q.push(node);
             color[node] = 0;
@@ -23,12 +23,26 @@ class Solution {
             }
             return true;
         }
+    
+        bool checkdfs(int node , int c , vector<int> &color , vector<vector<int>>& graph){
+            color[node] = c;
+            for(auto i:graph[node])
+                if(color[i]==-1){
+                    if(!checkdfs(i , 1-c , color , graph))
+                        return false;
+                }
+                else if(color[i]==c)
+                    return false;
+            return true;
+        }
+    
         bool isBipartite(vector<vector<int>>& graph) {
             int v = graph.size();
             vector<int> color(v,-1);
             for(int i=0;i<v;i++)
                 if(color[i]==-1)
-                    if(!check(i , color , graph))
+                    // if(!checkbfs(i , color , graph))
+                    if(!checkdfs(i , 0 , color , graph))
                         return false;
             return true;
         }
